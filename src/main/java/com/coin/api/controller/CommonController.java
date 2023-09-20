@@ -27,6 +27,7 @@ public class CommonController {
             logger.debug("test => {}", urlList.get(0));
 
             String googleUrl = urlList.get(0);
+//            String googleUrl = "https://www.google.com/search?newwindow=1&sca_esv=566763369&sxsrf=AM9HkKm7rRfV3RyNmzjKUdP7WpT6Bq1tHg:1695173126554&q=%EB%B9%84%ED%8A%B8%EC%BD%94%EC%9D%B8&tbm=nws&source=lnms&sa=X&ved=2ahUKEwihyqmAhLiBAxULhVYBHX02B58Q0pQJegQIChAB&biw=2133&bih=1025&dpr=0.9";
 
             Document doc = Jsoup.connect(googleUrl).get();
 
