@@ -25,19 +25,75 @@ public class CrawlingController {
     @Value("${https://www.google.com/search?q=}")
     private String googleSearchUrl;
 
+    @Value("${naver.search.url}")
+    private String naverSearchUrl;
+
+    @Value("${binance.news.url}")
+    private String binanceNewsUrl;
+
+    @Value("${mk.search.url}")
+    private String mkSearchUrl;
+
+    @Value("${mk.category.url}")
+    private String mkCategoryUrl;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @GetMapping("/g")
-    private String googleCrawing(@RequestParam("query") String query) throws IOException {
+    private String googleCrawing(@RequestParam(value = "query", required = false) String query) throws IOException {
 
 
         logger.debug("get query -> {}", query);
         logger.debug("get query -> {}", googleSearchUrl + query);
         Document doc = new Document(null);
         if(query == null){
-            doc = Jsoup.connect(googleSearchUrl).get();
+            doc = Jsoup.connect("https:" + googleSearchUrl).get();
         }else {
-            doc = Jsoup.connect(googleSearchUrl + query).get();
+            doc = Jsoup.connect("https:" + googleSearchUrl + query).get();
+        }
+        return doc.toString();
+    }
+
+    @GetMapping("/n")
+    private String naverCrawing(@RequestParam(value = "query", required = false) String query) throws IOException {
+
+
+        logger.debug("get query -> {}", query);
+        logger.debug("get query -> {}", googleSearchUrl + query);
+        Document doc = new Document(null);
+        if(query == null){
+            doc = Jsoup.connect("https:" + googleSearchUrl).get();
+        }else {
+            doc = Jsoup.connect("https:" + googleSearchUrl + query).get();
+        }
+        return doc.toString();
+    }
+
+
+
+    @GetMapping("/m")
+    private String mkCrawing(@RequestParam(value = "query", required = false) String query) throws IOException {
+        logger.debug("get query -> {}", query);
+        logger.debug("get query -> {}", googleSearchUrl + query);
+        Document doc = new Document(null);
+        if(query == null){
+            doc = Jsoup.connect("https:" + googleSearchUrl).get();
+        }else {
+            doc = Jsoup.connect("https:" + googleSearchUrl + query).get();
+        }
+        return doc.toString();
+    }
+
+    @GetMapping("/b")
+    private String binanceCrawing(@RequestParam(value = "query", required = false) String query) throws IOException {
+
+
+        logger.debug("get query -> {}", query);
+        Document doc = new Document(null);
+        if(query == null){
+            doc = Jsoup.connect("https:" + googleSearchUrl).get();
+        }else {
+            doc = Jsoup.connect("https:" + googleSearchUrl + query).get();
         }
         return doc.toString();
     }
