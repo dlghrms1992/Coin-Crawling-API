@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/")
+@RequestMapping("/v1")
 public class CrawlingController {
 
     @Value("${crawling.url}")
@@ -32,6 +32,7 @@ public class CrawlingController {
 
 
         logger.debug("get query -> {}", query);
+        logger.debug("get query -> {}", googleSearchUrl + query);
         Document doc = new Document(null);
         if(query == null){
             doc = Jsoup.connect(googleSearchUrl).get();
