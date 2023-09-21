@@ -3,6 +3,8 @@ package com.coin.api.controller;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +52,14 @@ public class CrawlingController {
             doc = Jsoup.connect("https:" + googleSearchUrl).get();
         }else {
             doc = Jsoup.connect("https:" + googleSearchUrl + query).get();
+            Elements links = doc.select("a"); // 모든 링크 요소 선택
+
+            for (Element link : links) {
+                String linkText = link.text(); // 링크 텍스트 추출
+                String linkHref = link.attr("href"); // 링크 URL 추출
+                System.out.println("텍스트: " + linkText);
+                System.out.println("URL: " + linkHref);
+            };
         }
         return doc.toString();
     }
