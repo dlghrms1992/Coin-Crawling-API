@@ -1,6 +1,7 @@
 package com.coin.api.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,27 +27,25 @@ public class CommonController {
     private List<String> urlList = new ArrayList<>();
     Logger logger = LoggerFactory.getLogger(getClass());
     @GetMapping("")
-    public ResponseEntity test() {
+    public String test() {
         logger.debug("info");
 
         try {
-            List<Map<String, Object>> urlData = new ArrayList<>();
+            List<String> urlData = new ArrayList<>();
             for(String url : urlList) {
                 if(Jsoup.connect(url).execute().statusCode() == 200){
                     Document doc = Jsoup.connect(url).get();
-                    Map<String, Object> data = new HashMap<>();
-                    data.put(url, doc);
-                    urlData.add(data);
 
+                    urlData.add(doc.toString());
                 }else {
                     logger.error("해당 url -> {} 연결 못함", url);
                 }
             }
 
-            return new ResponseEntity(urlData,HttpStatus.ACCEPTED);
+            return urlData.get(3);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_GATEWAY);
+            return null;
         }
     }
 
