@@ -1,16 +1,22 @@
 package com.coin.api.controller;
 
 
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 
 @RestController
@@ -20,23 +26,27 @@ public class CommonController {
     private List<String> urlList = new ArrayList<>();
     Logger logger = LoggerFactory.getLogger(getClass());
     @GetMapping("")
-    public String test() {
+    public ResponseEntity test() {
         logger.debug("info");
 
         try {
-            logger.debug("test => {}", urlList.get(0));
+            List<Map<String, Object>> urlData = new ArrayList<>();
+            for(String url : urlList) {
+                if(Jsoup.connect(url).execute().statusCode() == 200){
+                    Document doc = Jsoup.connect(url).get();
+                    Map<String, Object> data = new HashMap<>();
+                    data.put(url, doc);
+                    urlData.add(data);
 
-            String googleUrl = urlList.get(0);
-//            String googleUrl = "https://www.google.com/search?newwindow=1&sca_esv=566763369&sxsrf=AM9HkKm7rRfV3RyNmzjKUdP7WpT6Bq1tHg:1695173126554&q=%EB%B9%84%ED%8A%B8%EC%BD%94%EC%9D%B8&tbm=nws&source=lnms&sa=X&ved=2ahUKEwihyqmAhLiBAxULhVYBHX02B58Q0pQJegQIChAB&biw=2133&bih=1025&dpr=0.9";
+                }else {
+                    logger.error("해당 url -> {} 연결 못함", url);
+                }
+            }
 
-            Document doc = Jsoup.connect(googleUrl).get();
-
-            logger.debug("getData -> {}", doc.toString());
-            return doc.toString();
-
+            return new ResponseEntity(urlData,HttpStatus.ACCEPTED);
         } catch (IOException e) {
             e.printStackTrace();
-            return e.getMessage().toString();
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_GATEWAY);
         }
     }
 
